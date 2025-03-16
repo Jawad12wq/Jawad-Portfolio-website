@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -14,22 +14,37 @@ body {
     overflow-x: hidden;
 }
 
-/* Animated Background Particles */
-body::before {
+/* Animated Particle Layers */
+body::before, body::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="90" cy="90" r="3" fill="rgba(255,255,255,0.3)"/><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
-    animation: particleMove 20s infinite linear;
     z-index: -1;
 }
 
-@keyframes particleMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-50px, -50px); }
+body::before {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="90" cy="90" r="3" fill="rgba(255,255,255,0.3)"/></svg>');
+    animation: particleMove1 15s infinite linear;
+}
+
+body::after {
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="30" cy="70" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="20" r="2" fill="rgba(255,255,255,0.2)"/></svg>');
+    animation: particleMove2 25s infinite linear;
+}
+
+@keyframes particleMove1 {
+    0% { transform: translate(0, 0); opacity: 0.8; }
+    50% { transform: translate(-40px, -40px); opacity: 0.4; }
+    100% { transform: translate(0, 0); opacity: 0.8; }
+}
+
+@keyframes particleMove2 {
+    0% { transform: translate(0, 0); opacity: 0.6; }
+    50% { transform: translate(50px, 50px); opacity: 0.3; }
+    100% { transform: translate(0, 0); opacity: 0.6; }
 }
 
 /* Navigation */
@@ -69,11 +84,19 @@ nav ul li a:hover {
 header {
     text-align: center;
     padding: 5rem 0;
-    background: linear-gradient(45deg, #3498db, #2ecc71);
+    background: linear-gradient(45deg, #3498db, #8e44ad, #2ecc71);
+    background-size: 200% 200%;
+    animation: gradientShift 10s ease infinite;
     color: white;
     position: relative;
     overflow: hidden;
-    margin-top: 60px; /* Add margin to account for fixed navigation */
+    margin-top: 60px;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .header-content {
@@ -94,7 +117,9 @@ header {
 
 .header-text h1 {
     font-size: 3rem;
+    font-family: 'Poppins', sans-serif;
     animation: slideIn 1s ease-out;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
 .header-text p {
@@ -126,7 +151,8 @@ section {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-    margin-top: 2rem; /* Add margin above sections to create space from header */
+    margin-top: 2rem;
+    min-height: 200px; /* Ensure sections have a minimum height to be visible */
 }
 
 h2 {
@@ -134,26 +160,82 @@ h2 {
     margin-bottom: 1.5rem;
     text-align: center;
     color: #2c3e50;
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Animations */
-.fade-in {
+h3 {
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations for All Sections */
+.animated-section {
     opacity: 0;
-    animation: fadeIn 1s ease-in forwards;
 }
 
-@keyframes fadeIn {
-    to { opacity: 1; }
+.animated-section.visible,
+.animated-item.visible {
+    opacity: 1; /* Ensure visibility when animated */
 }
 
-@keyframes slideIn {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+#about.animated-section {
+    animation: slideInLeft 1s ease-out forwards;
 }
 
-@keyframes bounceIn {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.05); opacity: 1; }
+@keyframes slideInLeft {
+    0% { transform: translateX(-100px); opacity: 0; }
+    80% { transform: translateX(10px); opacity: 1; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+#skills .animated-item {
+    opacity: 0;
+    animation: zoomIn 0.5s ease-out forwards;
+}
+
+@keyframes zoomIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#projects .animated-item {
+    opacity: 0;
+    animation: flipIn 0.8s ease-out forwards;
+}
+
+@keyframes flipIn {
+    0% { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+    100% { transform: perspective(400px) rotateX(0deg); opacity: 1; }
+}
+
+#certificates .animated-item {
+    opacity: 0;
+    animation: slideUpRotate 0.7s ease-out forwards;
+}
+
+@keyframes slideUpRotate {
+    0% { transform: translateY(50px) rotate(5deg); opacity: 0; }
+    100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+
+#resume .animated-item {
+    opacity: 0;
+    animation: scaleFade 1s ease-out forwards;
+}
+
+@keyframes scaleFade {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.resume-btn {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
@@ -198,18 +280,26 @@ h2 {
 }
 
 .progress {
-    background: #2ecc71;
+    background: linear-gradient(90deg, #2ecc71, #3498db);
     height: 100%;
     transition: width 1s ease-in-out;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
 }
 
-/* Projects with Images */
+/* Projects with Featured Layout */
+.projects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
 .project-card {
-    background: white;
+    background: #f5f5f5;
+    border-radius: 10px;
     padding: 1.5rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -222,32 +312,66 @@ h2 {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 5px;
     margin-bottom: 1rem;
-    transition: transform 0.3s;
 }
 
-.project-card:hover .project-img {
+.project-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.project-card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.tech-icons {
+    margin: 1rem 0;
+}
+
+.tech-icons i {
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+    color: #3498db;
+    transition: color 0.3s;
+}
+
+.tech-icons i:hover {
+    color: #2ecc71;
+}
+
+.project-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.project-btn:hover {
+    background: #2980b9;
     transform: scale(1.05);
 }
 
-.project-card a {
-    color: #3498db;
-    text-decoration: none;
-    margin-right: 1rem;
+/* Certificates with Similar Layout */
+.certificates-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
 }
 
-.project-card a:hover {
-    text-decoration: underline;
-}
-
-/* Certificates with Images */
 .certificate-card {
-    background: white;
+    background: #f5f5f5;
+    border-radius: 10px;
     padding: 1.5rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -260,22 +384,45 @@ h2 {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 5px;
     margin-bottom: 1rem;
-    transition: transform 0.3s;
 }
 
-.certificate-card:hover .certificate-img {
-    transform: scale(1.05);
+.certificate-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
 }
 
-.certificate-card a {
+.certificate-card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.issuer-info {
+    margin: 1rem 0;
+}
+
+.issuer-info span {
+    font-size: 0.9rem;
     color: #3498db;
-    text-decoration: none;
+    font-weight: bold;
 }
 
-.certificate-card a:hover {
-    text-decoration: underline;
+.certificate-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.certificate-btn:hover {
+    background: #2980b9;
+    transform: scale(1.05);
 }
 
 /* Resume Section */
@@ -288,52 +435,18 @@ h2 {
     align-items: center;
     gap: 0.5rem;
     padding: 0.8rem 1.5rem;
-    background: #3498db;
+    background: linear-gradient(45deg, #2ecc71, #3498db);
     color: white;
     text-decoration: none;
     border-radius: 5px;
     transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
 }
 
 .resume-btn:hover {
-    background: #2980b9;
+    background: linear-gradient(45deg, #27ae60, #2980b9);
     transform: scale(1.05);
-}
-
-/* Contact Form */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-input, textarea {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: border-color 0.3s;
-}
-
-input:focus, textarea:focus {
-    border-color: #2ecc71;
-    outline: none;
-}
-
-button {
-    padding: 0.8rem;
-    background: #2ecc71;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.3s;
-}
-
-button:hover {
-    background: #27ae60;
-    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
 }
 
 /* Footer */
@@ -346,15 +459,73 @@ footer {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .header-content {
+        flex-direction: column;
+        padding: 3rem 1rem;
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+    }
+    .header-text h1 {
+        font-size: 2.5rem;
+    }
+    .skills-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .projects-container {
+        grid-template-columns: 1fr;
+    }
+    .certificates-container {
+        grid-template-columns: 1fr;
+    }
+    .project-card, .certificate-card {
+        padding: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
         align-items: center;
+        padding: 1rem 0;
     }
-    .header-content {
-        flex-direction: column;
-        text-align: center;
+    nav ul li {
+        margin: 0.5rem 0;
     }
-    .header-text h1 { font-size: 2rem; }
-    .header-text p { font-size: 1.2rem; }
+    .header-text h1 {
+        font-size: 2rem;
+    }
+    .header-text p {
+        font-size: 1.2rem;
+    }
+    section {
+        padding: 2rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+    .header-text h1 {
+        font-size: 1.5rem;
+    }
+    .social-links a {
+        font-size: 1.2rem;
+    }
+    .skills-container {
+        grid-template-columns: 1fr;
+    }
+    .projects-container {
+        grid-template-columns: 1fr;
+    }
+    .certificates-container {
+        grid-template-columns: 1fr;
+    }
+    h2 {
+        font-size: 2rem;
+    }
 }
